@@ -63,37 +63,29 @@ namespace PruebaApi.Controllers.api
 
         // PUT: api/Productoes/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutProducto(int id, Producto producto)
+        public IHttpActionResult PutProducto(ProductoViewModel producto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != producto.IdProducto)
-            {
-                return BadRequest();
-            }
+            var existingProducto = db.Producto.Where(s => s.IdProducto == producto.IdProducto)
+                                                        .FirstOrDefault<Producto>();
 
-            db.Entry(producto).State = EntityState.Modified;
-
-            try
+            if (existingProducto != null)
             {
+                existingProducto.IdProducto = producto.IdProducto;
+                existingProducto.Tipo = producto.Tipo;
+
                 db.SaveChanges();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!ProductoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok();
         }
 
         // POST: api/Productoes
@@ -122,15 +114,21 @@ namespace PruebaApi.Controllers.api
         [ResponseType(typeof(Producto))]
         public IHttpActionResult DeleteProducto(int id)
         {
-            Producto producto = db.Producto.Find(id);
-            if (producto == null)
+            if (id <= 0)
             {
-                return NotFound();
+                   return BadRequest("Not a valid student id");
             }
+           
+            Producto producto = db.Producto.Find(id);
+            using (var db = new Database1Entities())
+            {
+                var student = db.Producto
+                    .Where(s => s.IdProducto == id)
+                    .FirstOrDefault();
 
-            db.Producto.Remove(producto);
-            db.SaveChanges();
-
+                db.Entry(student).State = System.Data.Entity.EntityState.Deleted;
+                db.SaveChanges();
+            }
             return Ok(producto);
         }
 
@@ -143,9 +141,6 @@ namespace PruebaApi.Controllers.api
             base.Dispose(disposing);
         }
 
-        private bool ProductoExists(int id)
-        {
-            return db.Producto.Count(e => e.IdProducto == id) > 0;
-        }
+       
     }
 }

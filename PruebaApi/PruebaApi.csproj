@@ -272,6 +272,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Productos\Index.cshtml" />
     <Content Include="Views\Productos\Create.cshtml" />
+    <Content Include="Views\Productos\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
