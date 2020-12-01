@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Database1Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Color">
+    <Key>
+      <PropertyRef Name="IdColor" />
+    </Key>
+    <Property Name="IdColor" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="color" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="Producto">
+    <Key>
+      <PropertyRef Name="IdProducto" />
+    </Key>
+    <Property Name="IdProducto" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Tipo" Type="varchar" MaxLength="20" />
+    <Property Name="idColor" Type="int" />
+    <Property Name="idTalle" Type="int" />
+  </EntityType>
+  <EntityType Name="Talle">
+    <Key>
+      <PropertyRef Name="IdTalle" />
+    </Key>
+    <Property Name="IdTalle" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="talle" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <Association Name="FK__Producto__idColo__276EDEB3">
+    <End Role="Color" Type="Self.Color" Multiplicity="0..1" />
+    <End Role="Producto" Type="Self.Producto" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Color">
+        <PropertyRef Name="IdColor" />
+      </Principal>
+      <Dependent Role="Producto">
+        <PropertyRef Name="idColor" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Producto__idTall__286302EC">
+    <End Role="Talle" Type="Self.Talle" Multiplicity="0..1" />
+    <End Role="Producto" Type="Self.Producto" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Talle">
+        <PropertyRef Name="IdTalle" />
+      </Principal>
+      <Dependent Role="Producto">
+        <PropertyRef Name="idTalle" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Database1ModelStoreContainer">
+    <EntitySet Name="Color" EntityType="Self.Color" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Producto" EntityType="Self.Producto" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Talle" EntityType="Self.Talle" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__Producto__idColo__276EDEB3" Association="Self.FK__Producto__idColo__276EDEB3">
+      <End Role="Color" EntitySet="Color" />
+      <End Role="Producto" EntitySet="Producto" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Producto__idTall__286302EC" Association="Self.FK__Producto__idTall__286302EC">
+      <End Role="Talle" EntitySet="Talle" />
+      <End Role="Producto" EntitySet="Producto" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

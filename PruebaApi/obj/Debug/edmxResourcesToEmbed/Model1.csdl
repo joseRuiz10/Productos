@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Database1Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Color">
+    <Key>
+      <PropertyRef Name="IdColor" />
+    </Key>
+    <Property Name="IdColor" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="color1" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Producto" Relationship="Self.FK__Producto__idColo__276EDEB3" FromRole="Color" ToRole="Producto" />
+  </EntityType>
+  <EntityType Name="Producto">
+    <Key>
+      <PropertyRef Name="IdProducto" />
+    </Key>
+    <Property Name="IdProducto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Tipo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="idColor" Type="Int32" />
+    <Property Name="idTalle" Type="Int32" />
+    <NavigationProperty Name="Color" Relationship="Self.FK__Producto__idColo__276EDEB3" FromRole="Producto" ToRole="Color" />
+    <NavigationProperty Name="Talle" Relationship="Self.FK__Producto__idTall__286302EC" FromRole="Producto" ToRole="Talle" />
+  </EntityType>
+  <EntityType Name="Talle">
+    <Key>
+      <PropertyRef Name="IdTalle" />
+    </Key>
+    <Property Name="IdTalle" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="talle1" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Producto" Relationship="Self.FK__Producto__idTall__286302EC" FromRole="Talle" ToRole="Producto" />
+  </EntityType>
+  <Association Name="FK__Producto__idColo__276EDEB3">
+    <End Role="Color" Type="Self.Color" Multiplicity="0..1" />
+    <End Role="Producto" Type="Self.Producto" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Color">
+        <PropertyRef Name="IdColor" />
+      </Principal>
+      <Dependent Role="Producto">
+        <PropertyRef Name="idColor" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Producto__idTall__286302EC">
+    <End Role="Talle" Type="Self.Talle" Multiplicity="0..1" />
+    <End Role="Producto" Type="Self.Producto" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Talle">
+        <PropertyRef Name="IdTalle" />
+      </Principal>
+      <Dependent Role="Producto">
+        <PropertyRef Name="idTalle" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Database1Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Color" EntityType="Self.Color" />
+    <EntitySet Name="Producto" EntityType="Self.Producto" />
+    <EntitySet Name="Talle" EntityType="Self.Talle" />
+    <AssociationSet Name="FK__Producto__idColo__276EDEB3" Association="Self.FK__Producto__idColo__276EDEB3">
+      <End Role="Color" EntitySet="Color" />
+      <End Role="Producto" EntitySet="Producto" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Producto__idTall__286302EC" Association="Self.FK__Producto__idTall__286302EC">
+      <End Role="Talle" EntitySet="Talle" />
+      <End Role="Producto" EntitySet="Producto" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
