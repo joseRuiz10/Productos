@@ -71,5 +71,74 @@ namespace PruebaApi.Controllers
             ModelState.AddModelError(string.Empty, "Server Error. Please contact administrator.");
             return View(producto);
         }
+
+
+
+        public ActionResult Edit(int id)
+        {
+           ProductoViewModel producto = null;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44353/api/");
+                //HTTP GET
+                var responseTask = client.GetAsync("Productoes?id=" + id.ToString());
+                responseTask.Wait();
+
+                var result = responseTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<ProductoViewModel>();
+                    readTask.Wait();
+
+                    producto = readTask.Result;
+                }
+            }
+
+            return View(producto);
+        }
+
+
+       [HttpPost]
+    public ActionResult Edit(ProductoViewModel producto)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44353/api/");
+
+                //HTTP POST
+                var putTask = client.PutAsJsonAsync<ProductoViewModel>("Productoes", producto);
+                putTask.Wait();
+
+                var result = putTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+
+                    return RedirectToAction("Index");
+                }
+            }
+            return View(producto);
+        }
+
+         public ActionResult Delete(int id)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44353/api/");
+
+                //HTTP DELETE
+                var deleteTask = client.DeleteAsync("Productoes/" + id.ToString());
+                deleteTask.Wait();
+
+                var result = deleteTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }
