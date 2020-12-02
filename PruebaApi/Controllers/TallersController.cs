@@ -71,5 +71,76 @@ namespace PruebaApi.Controllers
             return View(talle);
         }
 
+
+        
+    public ActionResult Edit(int id)
+    {
+        TalleViewModel talle = null;
+
+        using (var client = new HttpClient())
+        {
+            client.BaseAddress = new Uri("https://localhost:44353/api/");
+            //HTTP GET
+            var responseTask = client.GetAsync("Talles?id=" + id.ToString());
+            responseTask.Wait();
+
+            var result = responseTask.Result;
+            if (result.IsSuccessStatusCode)
+            {
+                var readTask = result.Content.ReadAsAsync<TalleViewModel>();
+                readTask.Wait();
+
+                talle = readTask.Result;
+            }
+        }
+        return View(talle);
+    }
+
+    [HttpPost]
+    public ActionResult Edit(TalleViewModel talle)
+    {
+        using (var client = new HttpClient())
+        {
+            client.BaseAddress = new Uri("https://localhost:44353/api/talle");
+
+            //HTTP POST
+            var putTask = client.PutAsJsonAsync<TalleViewModel>("talle", talle);
+            putTask.Wait();
+
+            var result = putTask.Result;
+            if (result.IsSuccessStatusCode)
+            {
+
+                return RedirectToAction("Index");
+            }
+        }
+        return View(talle);
+    }
+
+        public ActionResult Delete(int id)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44353/api/");
+
+                //HTTP DELETE
+                var deleteTask = client.DeleteAsync("Talles/" + id.ToString());
+                deleteTask.Wait();
+
+                var result = deleteTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
+
+
+
     }
 }

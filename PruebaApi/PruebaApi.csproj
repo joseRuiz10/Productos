@@ -280,6 +280,8 @@
     <Content Include="Views\Colores\Create.cshtml" />
     <Content Include="Views\Tallers\Index.cshtml" />
     <Content Include="Views\Tallers\Create.cshtml" />
+    <Content Include="Views\Tallers\Edit.cshtml" />
+    <Content Include="Views\Tallers\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Talles\" />

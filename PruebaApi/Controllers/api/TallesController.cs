@@ -50,37 +50,29 @@ namespace PruebaApi.Controllers.api
 
         // PUT: api/Colors/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutColor(int id, Talle talle)
+        public IHttpActionResult Put(TalleViewModel talle)
         {
             if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+                return BadRequest("Not a valid model");
 
-            if (id != talle.IdTalle)
+            using (var db = new Database1Entities())
             {
-                return BadRequest();
-            }
+                var existingTalle = db.Talle.Where(s => s.IdTalle == talle.IdTalle)
+                                                        .FirstOrDefault<Talle>();
 
-            db.Entry(talle).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TalleExists(id))
+                if (existingTalle != null)
                 {
-                    return NotFound();
+                    existingTalle.talle1 = talle.Talle1;
+
+                    db.SaveChanges();
                 }
                 else
                 {
-                    throw;
+                    return NotFound();
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok();
         }
 
         // POST: api/Talles
@@ -105,22 +97,25 @@ namespace PruebaApi.Controllers.api
             return Ok();
         }
 
-        // DELETE: api/Colors/5
+        // DELETE: api/Talles/5
         [ResponseType(typeof(Talle))]
-        public IHttpActionResult DeleteTalle(int id)
+        public IHttpActionResult Delete(int id)
         {
-            Talle talle = db.Talle.Find(id);
-            if (talle == null)
+            if (id <= 0)
+                return BadRequest("Not a valid student id");
+
+            using (var db = new Database1Entities())
             {
-                return NotFound();
+                var talle = db.Talle
+                    .Where(s => s.IdTalle == id)
+                    .FirstOrDefault();
+
+                db.Entry(talle).State = System.Data.Entity.EntityState.Deleted;
+                db.SaveChanges();
             }
 
-            db.Talle.Remove(talle);
-            db.SaveChanges();
-
-            return Ok(talle);
+            return Ok();
         }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
